@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-spectal: "Spectral", serif;
+  --font-poppins: "Poppins", sans-serif;
+}
+
+body{
+    font-family: "Spectral", serif;;
+}
+
+@keyframes heroTextIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Gentle up-and-down movement */
+.feature-float {
+    animation: featureFloat 3s ease-in-out infinite;
+}
+
+@keyframes featureFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Subtle image pulse */
+.feature-pulse {
+    animation: featurePulse 2.5s ease-in-out infinite;
+}
+
+@keyframes featurePulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+/* Discount stamp */
+.discount-stamp {
+    animation: discountStamp 2s ease-in-out infinite;
+}
+
+@keyframes discountStamp {
+    0%, 100% {
+        transform: rotate(-10deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(10deg) scale(1.12);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .feature-float,
+    .feature-pulse,
+    .discount-stamp {
+        animation: none;
+    }
+}
