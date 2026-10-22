@@ -1,6 +1,4 @@
 
-import React from "react";
-
 const features = [
     {
         image: "https://flone.jamstacktemplates.dev/assets/img/icon-img/support-1.png",
@@ -36,8 +34,8 @@ const ServiceFeatures = () => {
                     <div
                         key={feature.title}
                         className={`flex items-center justify-center gap-4 px-4 py-5 sm:px-5 lg:py-3 ${index !== 0
-                                ? "border-t border-slate-200 sm:border-t-0 sm:border-l"
-                                : ""
+                            ? "border-t border-slate-200 sm:border-t-0 sm:border-l"
+                            : ""
                             }`}
                     >
                         <div className="relative flex h-14 w-14 shrink-0 items-center justify-center">

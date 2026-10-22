@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Safely read data from localStorage.
 const readStorage = (key) => {
@@ -190,12 +191,14 @@ const App = () => {
 
   return (
     <>
+      <ScrollToTop />
       <Navbar
         cart={cart}
         wishlist={wishlist}
         isLoggedIn={isLoggedIn}
         onLogout={handleLogout}
       />
+      <div className="h-[120px] md:h-[68px]" aria-hidden="true" />
 
       <Routes>
         <Route

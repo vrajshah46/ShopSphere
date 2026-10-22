@@ -10,10 +10,10 @@ const categories = [
         category: "beauty",
     },
     {
-        name: "Fragrances",
-        description: "Find your signature scent",
+        name: "Clothing",
+        description: "Discover your style",
         color: "from-purple-100 to-violet-200",
-        category: "fragrances",
+        category: "mens-shirts",
     },
     {
         name: "Furniture",

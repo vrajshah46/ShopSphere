@@ -1,26 +1,71 @@
 
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
-const Navbar = ({ cart = [], wishlist = [], isLoggedIn, onLogout }) => {
+const Navbar = ({
+    cart = [],
+    wishlist = [],
+    isLoggedIn,
+    onLogout,
+}) => {
     const [search, setSearch] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
 
     const navigate = useNavigate();
+    const navbarRef = useRef(null);
 
+    const closeMenu = () => setMenuOpen(false);
+
+    // Search products
     const handleSearch = (e) => {
         e.preventDefault();
 
         const query = search.trim();
+
         if (!query) return;
 
-        setMenuOpen(false);
+        closeMenu();
         navigate(`/?search=${encodeURIComponent(query)}`);
     };
 
-    const closeMenu = () => setMenuOpen(false);
+    // Close menu when clicking outside or scrolling the page
+    useEffect(() => {
+        if (!menuOpen) return;
 
-    const searchForm = (mobile = false) => (
+        const openedAtY = window.scrollY;
+
+        const handleOutsideClick = (event) => {
+            if (
+                navbarRef.current &&
+                !navbarRef.current.contains(event.target)
+            ) {
+                setMenuOpen(false);
+            }
+        };
+
+        const handleScroll = () => {
+            if (Math.abs(window.scrollY - openedAtY) > 8) {
+                setMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("pointerdown", handleOutsideClick);
+        window.addEventListener("scroll", handleScroll, {
+            passive: true,
+        });
+
+        return () => {
+            document.removeEventListener(
+                "pointerdown",
+                handleOutsideClick
+            );
+
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, [menuOpen]);
+
+    // Reusable search form
+    const SearchForm = ({ mobile = false }) => (
         <form
             onSubmit={handleSearch}
             className={
@@ -33,194 +78,256 @@ const Navbar = ({ cart = [], wishlist = [], isLoggedIn, onLogout }) => {
                 type="search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search products, brands and more..."
+                placeholder="Search products, brands..."
                 aria-label="Search products"
-                className="min-w-0 flex-1 rounded-l-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-black focus:ring-1 focus:ring-black"
+                className="min-w-0 flex-1 rounded-l-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-400/30"
             />
 
             <button
                 type="submit"
-                className="rounded-r-lg bg-white px-3 py-2 text-sm font-semibold text-black transition hover:bg-gray-200"
+                className="rounded-r-lg bg-violet-400 px-4 py-2 text-sm font-semibold text-[#0e1d55] transition hover:bg-violet-300"
             >
                 Search
             </button>
         </form>
     );
 
+    const mobileLinkClass =
+        "flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 transition-colors duration-200 hover:border-violet-300/30 hover:bg-white/10 active:bg-white/15";
+
     return (
-        <nav className="sticky top-0 z-50 border-b border-gray-800 bg-[#0e1d55] text-white shadow-lg">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-                {/* Main navbar row */}
-                <div className="flex min-h-[68px] items-center justify-between gap-3">
-
-                    {/* Logo */}
-                    <Link
-                        to="/"
-                        onClick={closeMenu}
-                        className="flex shrink-0 items-center gap-2"
-                    >
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-xl font-extrabold text-black sm:h-10 sm:w-10">
-                            S
-                        </div>
-
-                        <span className="text-lg font-bold tracking-tight sm:text-2xl">
-                            ShopSphere
-                        </span>
-                    </Link>
-
-                    {/* Desktop search */}
-                    {searchForm(false)}
-
-                    {/* Desktop navigation */}
-
-                    <div className="hidden shrink-0 items-center gap-3 md:flex lg:gap-4">
-
-                        <Link
-                            to="/products"
-                            className="flex items-center gap-2 font-medium text-white transition"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M3 9h18l-2-6H5L3 9Z" />
-                                <path d="M5 9v12h14V9" />
-                                <path d="M9 21v-7h6v7" />
-                            </svg>
-                            Shop
-                        </Link>
-
-                        <Link
-                            to="/wishlist"
-                            className="flex items-center gap-2 font-medium text-white transition"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fb7185" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" />
-                            </svg>
-                            Wishlist
-                            {wishlist.length > 0 && (
-                                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
-                                    {wishlist.length}
-                                </span>
-                            )}
-                        </Link>
-
-                        <Link
-                            to="/cart"
-                            className="flex items-center gap-2 rounded-lg border border-gray-700 px-3 py-2 text-white transition hover:border-gray-500 hover:bg-gray-800"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="9" cy="21" r="1" />
-                                <circle cx="20" cy="21" r="1" />
-                                <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H5" />
-                            </svg>
-                            <span className="text-sm font-semibold">Cart</span>
-                            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-xs font-bold text-black">
-                                {cart.length}
-                            </span>
-                        </Link>
-
-                        {isLoggedIn ? (
-                            <button
-                                onClick={onLogout}
-                                className="flex items-center gap-2 rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-white transition hover:border-red-500 hover:bg-red-950"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M10 17l5-5-5-5" />
-                                    <path d="M15 12H3" />
-                                    <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
-                                </svg>
-                                Logout
-                            </button>
-                        ) : (
-                            <Link
-                                to="/login"
-                                className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-gray-200"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                    <circle cx="12" cy="8" r="4" />
-                                    <path d="M5 21a7 7 0 0 1 14 0" />
-                                </svg>
-                                Login
-                            </Link>
-                        )}
-                    </div>
-
-
-                    {/* Mobile hamburger */}
-                    <button
-                        type="button"
-                        onClick={() => setMenuOpen((prev) => !prev)}
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-700 text-2xl text-white transition hover:bg-gray-800 md:hidden"
-                        aria-label={menuOpen ? "Close menu" : "Open menu"}
-                        aria-expanded={menuOpen}
-                    >
-                        {menuOpen ? "✕" : "☰"}
-                    </button>
-                </div>
-
-                {/* Mobile search: separate row */}
-                <div className="pb-3 md:hidden">
-                    {searchForm(true)}
-                </div>
-            </div>
-
-            {/* Mobile dropdown menu */}
-            {menuOpen && (
-                <div className="border-t border-gray-800 bg-[#0e1d55] px-4 py-3 md:hidden">
-                    <div className="mx-auto flex max-w-7xl flex-col gap-1">
-
+        <>
+            <nav
+                ref={navbarRef}
+                className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0e1d55] text-white shadow-lg"
+            >
+                {/* Main navbar */}
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex min-h-[68px] items-center justify-between gap-3">
+                        {/* Logo */}
                         <Link
                             to="/"
                             onClick={closeMenu}
-                            className="rounded-lg px-4 py-3 text-sm font-medium hover:bg-gray-800"
+                            className="flex shrink-0 items-center gap-2"
                         >
-                            Home
-                        </Link>
+                            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white text-xl font-extrabold text-[#0e1d55] sm:h-10 sm:w-10">
+                                S
+                            </span>
 
-                        <Link
-                            to="/wishlist"
-                            onClick={closeMenu}
-                            className="flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium hover:bg-gray-800"
-                        >
-                            <span>♡ Wishlist</span>
-                            <span className="text-gray-400">
-                                {wishlist.length}
+                            <span className="text-lg font-bold tracking-tight sm:text-2xl">
+                                Shop<span className="text-violet-400">Sphere</span>
+                                <span className="text-violet-400">.</span>
                             </span>
                         </Link>
 
-                        <Link
-                            to="/cart"
-                            onClick={closeMenu}
-                            className="flex items-center justify-between rounded-lg px-4 py-3 text-sm font-medium hover:bg-gray-800"
-                        >
-                            <span>🛒 Cart</span>
-                            <span className="text-gray-400">
-                                {cart.length}
-                            </span>
-                        </Link>
+                        {/* Desktop search */}
+                        <SearchForm />
 
-                        {isLoggedIn ? (
-                            <button
-                                onClick={() => {
-                                    closeMenu();
-                                    onLogout();
-                                }}
-                                className="rounded-lg px-4 py-3 text-left text-sm font-medium text-red-400 hover:bg-gray-800"
-                            >
-                                Logout
-                            </button>
-                        ) : (
+                        {/* Desktop navigation */}
+                        <div className="hidden shrink-0 items-center gap-4 md:flex">
                             <Link
-                                to="/login"
-                                onClick={closeMenu}
-                                className="rounded-lg px-4 py-3 text-sm font-medium hover:bg-gray-800"
+                                to="/products"
+                                className="font-medium transition hover:text-violet-300"
                             >
-                                Login / Sign Up
+                                Shop
                             </Link>
-                        )}
+
+                            <Link
+                                to="/wishlist"
+                                className="flex items-center gap-2 font-medium transition hover:text-violet-300"
+                            >
+                                <span className="text-rose-300">♡</span>
+                                Wishlist
+
+                                {wishlist.length > 0 && (
+                                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-xs font-bold">
+                                        {wishlist.length}
+                                    </span>
+                                )}
+                            </Link>
+
+                            <Link
+                                to="/cart"
+                                className="flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 transition hover:border-violet-300/40 hover:bg-white/10"
+                            >
+                                <span>🛒</span>
+                                <span className="text-sm font-semibold">Cart</span>
+
+                                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-xs font-bold text-[#0e1d55]">
+                                    {cart.length}
+                                </span>
+                            </Link>
+
+                            {isLoggedIn ? (
+                                <button
+                                    type="button"
+                                    onClick={onLogout}
+                                    className="rounded-lg border border-white/15 px-3 py-2 text-sm font-semibold transition hover:border-red-400 hover:bg-red-500/10"
+                                >
+                                    Logout
+                                </button>
+                            ) : (
+                                <Link
+                                    to="/login"
+                                    className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-[#0e1d55] transition hover:bg-violet-200"
+                                >
+                                    Login
+                                </Link>
+                            )}
+                        </div>
+
+                        {/* Mobile hamburger */}
+                        <button
+                            type="button"
+                            onClick={() => setMenuOpen((prev) => !prev)}
+                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/20 transition hover:bg-white/10 active:scale-95 md:hidden"
+                            aria-label={menuOpen ? "Close menu" : "Open menu"}
+                            aria-expanded={menuOpen}
+                            aria-controls="mobile-navigation"
+                        >
+                            {menuOpen ? (
+                                <svg
+                                    width="23"
+                                    height="23"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                >
+                                    <path d="M18 6 6 18" />
+                                    <path d="m6 6 12 12" />
+                                </svg>
+                            ) : (
+                                <svg
+                                    width="23"
+                                    height="23"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                >
+                                    <path d="M4 6h16" />
+                                    <path d="M4 12h16" />
+                                    <path d="M4 18h16" />
+                                </svg>
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Mobile search */}
+                    <div className="pb-3 md:hidden">
+                        <SearchForm mobile />
                     </div>
                 </div>
-            )}
-        </nav>
+
+                {/* Mobile dropdown: positioned outside normal page flow */}
+                <div
+                    id="mobile-navigation"
+                    aria-hidden={!menuOpen}
+                    className={`absolute left-0 right-0 top-full border-t border-white/10 bg-[#0e1d55] shadow-2xl transition-[opacity,transform,visibility] duration-200 ease-out motion-reduce:transition-none md:hidden ${menuOpen
+                        ? "visible translate-y-0 opacity-100"
+                        : "invisible -translate-y-2 opacity-0 pointer-events-none"
+                        }`}
+                >
+                    <div className="max-h-[70vh] overflow-y-auto overscroll-contain">
+                        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+                            <div className="mb-4 flex items-center justify-between">
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200/70">
+                                    Navigation
+                                </p>
+
+                                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-blue-100">
+                                    ShopSphere
+                                </span>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Link
+                                    to="/"
+                                    onClick={closeMenu}
+                                    className={mobileLinkClass}
+                                >
+                                    <span className="text-xl">⌂</span>
+                                    <span className="flex-1 text-sm font-semibold">
+                                        Home
+                                    </span>
+                                    <span className="text-white/40">›</span>
+                                </Link>
+
+                                <Link
+                                    to="/products"
+                                    onClick={closeMenu}
+                                    className={mobileLinkClass}
+                                >
+                                    <span className="text-xl">▤</span>
+                                    <span className="flex-1 text-sm font-semibold">
+                                        Shop Products
+                                    </span>
+                                    <span className="text-white/40">›</span>
+                                </Link>
+
+                                <Link
+                                    to="/wishlist"
+                                    onClick={closeMenu}
+                                    className={mobileLinkClass}
+                                >
+                                    <span className="text-xl text-rose-300">♡</span>
+                                    <span className="flex-1 text-sm font-semibold">
+                                        Wishlist
+                                    </span>
+                                    <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-rose-500 px-2 text-xs font-bold">
+                                        {wishlist.length}
+                                    </span>
+                                </Link>
+
+                                <Link
+                                    to="/cart"
+                                    onClick={closeMenu}
+                                    className={mobileLinkClass}
+                                >
+                                    <span className="text-xl">🛒</span>
+                                    <span className="flex-1 text-sm font-semibold">
+                                        Shopping Cart
+                                    </span>
+                                    <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-emerald-500 px-2 text-xs font-bold">
+                                        {cart.length}
+                                    </span>
+                                </Link>
+                            </div>
+
+                            <div className="mt-4 border-t border-white/10 pt-4">
+                                {isLoggedIn ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            closeMenu();
+                                            onLogout();
+                                        }}
+                                        className="w-full rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3.5 text-sm font-semibold text-red-300 transition hover:bg-red-500/20"
+                                    >
+                                        Logout
+                                    </button>
+                                ) : (
+                                    <Link
+                                        to="/login"
+                                        onClick={closeMenu}
+                                        className="block rounded-xl bg-white px-4 py-3.5 text-center text-sm font-bold text-[#0e1d55] transition hover:bg-violet-200"
+                                    >
+                                        Login / Sign Up
+                                    </Link>
+                                )}
+                            </div>
+
+                            <p className="pt-4 text-center text-[11px] tracking-wide text-blue-100/40">
+                                Your style, your choice.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </>
     );
 };
 

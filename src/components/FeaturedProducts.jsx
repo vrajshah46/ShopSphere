@@ -9,21 +9,39 @@ const FeaturedProducts = ({ wishlist, addToCart, toggleWishlist }) => {
     const [error, setError] = useState("");
 
     useEffect(() => {
+
         const fetchFeaturedProducts = async () => {
             try {
                 setLoading(true);
                 setError("");
 
-                const response = await fetch(
-                    "https://dummyjson.com/products?limit=8&sortBy=rating&order=desc"
+                const categories = [
+                    "beauty",
+                    "fragrances",
+                    "furniture",
+                    "laptops",
+                    "mens-shirts",
+                    "womens-dresses",
+                    "mens-shoes",
+                    "tops",
+                ];
+
+                const results = await Promise.all(
+                    categories.map(async (category) => {
+                        const response = await fetch(
+                            `https://dummyjson.com/products/category/${category}?limit=1`
+                        );
+
+                        if (!response.ok) {
+                            throw new Error("Failed to fetch products");
+                        }
+
+                        const data = await response.json();
+                        return data.products?.[0];
+                    })
                 );
 
-                if (!response.ok) {
-                    throw new Error("Failed to fetch products");
-                }
-
-                const data = await response.json();
-                setProducts(data.products || []);
+                setProducts(results.filter(Boolean));
             } catch {
                 setError("Products load nahi ho paaye. Please try again.");
             } finally {
