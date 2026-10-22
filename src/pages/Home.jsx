@@ -2,7 +2,7 @@ import HeroSection from "../components/HeroSection";
 import ServiceFeatures from "../components/ServiceFeatures";
 import CategorySection from "../components/CategorySection";
 import FeaturedProducts from "../components/FeaturedProducts";
-import WhyShopWithUs from "../components/WhyShopWithUs";
+import BlogSection from "../components/BlogSection ";
 
 const Home = ({ wishlist, addToCart, toggleWishlist }) => {
     return (
@@ -17,7 +17,7 @@ const Home = ({ wishlist, addToCart, toggleWishlist }) => {
                     toggleWishlist={toggleWishlist}
                 />
 
-                <WhyShopWithUs />
+                <BlogSection />
             </main>
         </section>
 

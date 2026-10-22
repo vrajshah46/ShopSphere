@@ -9,6 +9,8 @@ const ProductDetails = ({ addToCart }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {
