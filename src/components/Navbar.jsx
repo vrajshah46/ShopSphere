@@ -64,7 +64,6 @@ const Navbar = ({
         };
     }, [menuOpen]);
 
-    // Reusable search form
     const SearchForm = ({ mobile = false }) => (
         <form
             onSubmit={handleSearch}
@@ -116,7 +115,7 @@ const Navbar = ({
 
                             <span className="text-lg font-bold tracking-tight sm:text-2xl">
                                 Shop<span className="text-violet-400">Sphere</span>
-                                <span className="text-violet-400">.</span>
+                                <span className="text-violet-400"></span>
                             </span>
                         </Link>
 

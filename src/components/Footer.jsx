@@ -16,7 +16,7 @@ const Footer = () => {
                             className="text-2xl font-extrabold tracking-tight text-white"
                         >
                             Shop<span className="text-violet-400">Sphere</span>
-                            <span className="text-violet-400">.</span>
+                            <span className="text-violet-400"></span>
                         </Link>
 
                         <p className="mt-4 max-w-xs text-sm leading-7 text-slate-400">
@@ -57,7 +57,6 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* Quick Links */}
                     <div>
                         <h3 className="font-bold text-white">
                             Quick Links
@@ -87,7 +86,6 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Customer Service */}
                     <div>
                         <h3 className="font-bold text-white">
                             Customer Service

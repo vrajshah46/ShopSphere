@@ -11,6 +11,8 @@ import Checkout from "./pages/Checkout";
 import Toast from "./components/Toast";
 import ProductDetails from "./pages/ProductDetails";
 import Wishlist from "./pages/Wishlist";
+import Blog from "./pages/Blog";
+import BlogDetails from "./pages/BlogDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -279,6 +281,11 @@ const App = () => {
           path="/admin"
           element={<AdminDashboard />}
         />
+
+        <Route path="/blog" element={<Blog />} />
+
+        <Route path="/blog/:slug" element={<BlogDetails />} />
+
       </Routes>
 
       <Footer />
