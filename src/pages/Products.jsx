@@ -1,9 +1,11 @@
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import useCartStore from "../store/cartStore";
 
-const Products = ({ addToCart, wishlist = [], toggleWishlist }) => {
+const Products = () => {
+    const { wishlist, addToCart, toggleWishlist } = useCartStore();
     const [products, setProducts] = useState([]);
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -23,8 +25,17 @@ const Products = ({ addToCart, wishlist = [], toggleWishlist }) => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const productsRef = useRef(null);
 
     const productsPerPage = 6;
+
+
+    useEffect(() => {
+        productsRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+    }, [currentPage]);
 
     // Sync filters when URL changes
     useEffect(() => {
@@ -37,7 +48,7 @@ const Products = ({ addToCart, wishlist = [], toggleWishlist }) => {
 
         setCurrentPage(1);
     }, [searchParams]);
-
+    
     // Fetch products
     useEffect(() => {
         const fetchProducts = async () => {
@@ -267,7 +278,7 @@ const Products = ({ addToCart, wishlist = [], toggleWishlist }) => {
     );
 
     return (
-        <section className="min-h-screen bg-[#f8f9fc]">
+        <section ref={productsRef} className="min-h-screen bg-[#f8f9fc] scroll-mt-24">
             <div className="mx-auto max-w-[1500px] px-4 py-7 sm:px-6 lg:px-8">
 
                 {/* Page heading */}

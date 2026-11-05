@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import useCartStore from "../store/cartStore";
 
 const HeartIcon = ({ size = 24, filled = false, className = "" }) => (
     <svg
@@ -36,7 +37,9 @@ const ArrowIcon = () => (
     </svg>
 );
 
-const Wishlist = ({ wishlist = [], addToCart, toggleWishlist }) => {
+const Wishlist = () => {
+    const { wishlist, addToCart, toggleWishlist } = useCartStore();
+
     return (
         <main className="min-h-screen bg-[#f8f8fa]">
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">

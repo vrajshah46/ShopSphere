@@ -1,7 +1,9 @@
 
 import { Link } from "react-router-dom";
+import useCartStore from "../store/cartStore";
 
-const Cart = ({ cart, removeFromCart, increment, decrement }) => {
+const Cart = () => {
+    const { cart, removeFromCart, incrementQuantity, decrementQuantity } = useCartStore();
     const totalPrice = cart.reduce((total, item) => {
         return total + item.price * item.quantity;
     }, 0);
@@ -87,7 +89,7 @@ const Cart = ({ cart, removeFromCart, increment, decrement }) => {
                                         <div className="flex flex-wrap items-center gap-3">
                                             <div className="flex items-center rounded-lg border border-gray-300">
                                                 <button
-                                                    onClick={() => decrement(item)}
+                                                    onClick={() => decrementQuantity(item.id)}
                                                     disabled={item.quantity <= 1}
                                                     className="flex h-9 w-9 items-center justify-center rounded-l-lg text-lg font-semibold text-gray-700 transition hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-40"
                                                     aria-label={`Decrease ${item.title} quantity`}
@@ -100,7 +102,7 @@ const Cart = ({ cart, removeFromCart, increment, decrement }) => {
                                                 </span>
 
                                                 <button
-                                                    onClick={() => increment(item)}
+                                                    onClick={() => incrementQuantity(item.id)}
                                                     className="flex h-9 w-9 items-center justify-center rounded-r-lg text-lg font-semibold text-gray-700 transition hover:bg-blue-50 hover:text-blue-600"
                                                     aria-label={`Increase ${item.title} quantity`}
                                                 >
@@ -109,7 +111,7 @@ const Cart = ({ cart, removeFromCart, increment, decrement }) => {
                                             </div>
 
                                             <button
-                                                onClick={() => removeFromCart(item)}
+                                                onClick={() => removeFromCart(item.id)}
                                                 className="rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
                                             >
                                                 Remove

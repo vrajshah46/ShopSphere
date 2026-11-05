@@ -2,12 +2,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
+import useCartStore from "../store/cartStore";
 
-const FeaturedProducts = ({
-    wishlist = [],
-    addToCart,
-    toggleWishlist,
-}) => {
+const FeaturedProducts = () => {
+    const { wishlist, addToCart, toggleWishlist } = useCartStore();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -43,7 +41,7 @@ const FeaturedProducts = ({
 
                         const data = await response.json();
                         return data.products?.[0];
-                    })
+                    })  
                 );
 
                 if (isMounted) {

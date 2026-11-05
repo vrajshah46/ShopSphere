@@ -1,9 +1,12 @@
 
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import useCartStore from "../store/cartStore";
 
-const ProductDetails = ({ addToCart }) => {
+const ProductDetails = () => {
+    const { addToCart } = useCartStore();
     const { id } = useParams();
+    const buttonRef = useRef(null);
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -11,6 +14,26 @@ const ProductDetails = ({ addToCart }) => {
 
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [relatedLoading, setRelatedLoading] = useState(false);
+
+    const handleAddToCart = (e) => {
+        // Ripple effect
+        const button = buttonRef.current;
+        if (button) {
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            button.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        addToCart(product);
+    };
 
     // Fetch Current Product
     useEffect(() => {
@@ -175,9 +198,10 @@ const ProductDetails = ({ addToCart }) => {
 
                         {/* Add To Cart */}
                         <button
-                            onClick={() => addToCart(product)}
+                            ref={buttonRef}
+                            onClick={handleAddToCart}
                             disabled={product.stock <= 0}
-                            className="mt-7 w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400 sm:w-fit"
+                            className="button-ripple mt-7 w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400 sm:w-fit"
                         >
                             Add to Cart
                         </button>

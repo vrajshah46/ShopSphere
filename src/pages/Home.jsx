@@ -4,18 +4,14 @@ import CategorySection from "../components/CategorySection";
 import FeaturedProducts from "../components/FeaturedProducts";
 import BlogSection from "../components/BlogSection ";
 
-const Home = ({ wishlist, addToCart, toggleWishlist }) => {
+const Home = () => {
     return (
         <section>
             <HeroSection />
             <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                 <ServiceFeatures />
                 <CategorySection />
-                <FeaturedProducts
-                    wishlist={wishlist}
-                    addToCart={addToCart}
-                    toggleWishlist={toggleWishlist}
-                />
+                <FeaturedProducts />
 
                 <BlogSection />
             </main>

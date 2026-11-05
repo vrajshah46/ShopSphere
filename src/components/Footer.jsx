@@ -6,10 +6,8 @@ const Footer = () => {
         <footer className="mt-16 bg-[#0e1d55] text-slate-300">
             <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
 
-                {/* Main Footer */}
                 <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
 
-                    {/* Brand */}
                     <div>
                         <Link
                             to="/"
@@ -110,7 +108,6 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Shopping Benefits */}
                     <div>
                         <h3 className="font-bold text-white">
                             Shop With Confidence
@@ -133,7 +130,6 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Bottom Bar */}
                 <div className="mt-12 flex flex-col gap-4 border-t border-slate-800 pt-6 text-center text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:text-left">
                     <p>
                         © {new Date().getFullYear()} ShopSphere. All rights reserved.

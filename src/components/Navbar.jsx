@@ -1,13 +1,13 @@
 
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import useCartStore from "../store/cartStore";
 
 const Navbar = ({
-    cart = [],
-    wishlist = [],
     isLoggedIn,
     onLogout,
 }) => {
+    const { cart, wishlist } = useCartStore();
     const [search, setSearch] = useState("");
     const [menuOpen, setMenuOpen] = useState(false);
 

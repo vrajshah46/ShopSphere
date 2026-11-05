@@ -1,5 +1,6 @@
 
 import { Link } from "react-router-dom";
+import { useRef } from "react";
 
 const ProductCard = ({
     product,
@@ -12,6 +13,28 @@ const ProductCard = ({
         (item) => item.id === product.id
     );
 
+    const buttonRef = useRef(null);
+
+    const handleAddToCart = (e) => {
+        // Ripple effect
+        const button = buttonRef.current;
+        if (button) {
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            button.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 600);
+        }
+
+        if (addToCart) addToCart(product);
+    };
+
     const priceInINR = product.price * 85;
 
     const formattedPrice = priceInINR.toLocaleString("en-IN", {
@@ -19,10 +42,6 @@ const ProductCard = ({
     });
 
     const discount = Math.round(product.discountPercentage || 0);
-
-    const handleAddToCart = () => {
-        if (addToCart) addToCart(product);
-    };
 
     const handleWishlist = () => {
         if (toggleWishlist) toggleWishlist(product);
@@ -141,10 +160,11 @@ const ProductCard = ({
                             </Link>
 
                             <button
+                                ref={buttonRef}
                                 type="button"
                                 onClick={handleAddToCart}
                                 disabled={product.stock <= 0}
-                                className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+                                className="button-ripple inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-300"
                             >
                                 <svg
                                     width="18"
@@ -244,10 +264,11 @@ const ProductCard = ({
                 </div>
 
                 <button
+                    ref={buttonRef}
                     type="button"
                     onClick={handleAddToCart}
                     disabled={product.stock <= 0}
-                    className="mt-4 w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+                    className="button-ripple mt-4 w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-300"
                 >
                     {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
                 </button>

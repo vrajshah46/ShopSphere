@@ -81,7 +81,7 @@ const useCartStore = create(
       // REMOVE FROM WISHLIST
       removeFromWishlist: (id) =>
         set((state) => ({
-          wishlist: state.wishlist.filter(
+          wishlist: state.wishlist.filter(  
             (item) => item.id !== id
           ),
         })),

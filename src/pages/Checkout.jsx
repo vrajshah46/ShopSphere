@@ -1,8 +1,10 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import useCartStore from "../store/cartStore";
 
-const Checkout = ({ cart, clearCart, setToast }) => {
+const Checkout = ({ setToast }) => {
+    const { cart, clearCart } = useCartStore();
     const [orderPlaced, setOrderPlaced] = useState(false);
     const [orderId, setOrderId] = useState("");
 
