@@ -2,6 +2,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import useCartStore from "../store/cartStore";
+import AddToCartButton from "../components/AddToCartButton";
 
 const ProductDetails = () => {
     const { addToCart } = useCartStore();
@@ -196,15 +197,16 @@ const ProductDetails = () => {
                             {product.description}
                         </p>
 
-                        {/* Add To Cart */}
-                        <button
-                            ref={buttonRef}
-                            onClick={handleAddToCart}
+
+                        <AddToCartButton
+                            onAddToCart={() => addToCart?.(product)}
+                            text="Add to Cart"
+                            addedText="Added"
+                            loadingTime={1000}
+                            resetTime={2000}
                             disabled={product.stock <= 0}
-                            className="button-ripple mt-7 w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400 sm:w-fit"
-                        >
-                            Add to Cart
-                        </button>
+                            className="!rounded-xl !bg-indigo-600 !px-5 !py-3 !text-sm hover:!bg-indigo-700 w-[50%] mt-5"
+                        />
 
                     </div>
                 </div>

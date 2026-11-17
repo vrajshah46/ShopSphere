@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { useRef } from "react";
+import AddToCartButton from "./AddToCartButton";
 
 const ProductCard = ({
     product,
@@ -12,28 +12,6 @@ const ProductCard = ({
     const isWishlisted = wishlist.some(
         (item) => item.id === product.id
     );
-
-    const buttonRef = useRef(null);
-
-    const handleAddToCart = (e) => {
-        // Ripple effect
-        const button = buttonRef.current;
-        if (button) {
-            const rect = button.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            const ripple = document.createElement('span');
-            ripple.className = 'ripple';
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
-            button.appendChild(ripple);
-
-            setTimeout(() => ripple.remove(), 600);
-        }
-
-        if (addToCart) addToCart(product);
-    };
 
     const priceInINR = product.price * 85;
 
@@ -159,29 +137,16 @@ const ProductCard = ({
                                 View Details
                             </Link>
 
-                            <button
-                                ref={buttonRef}
-                                type="button"
-                                onClick={handleAddToCart}
+                            <AddToCartButton
+                                onAddToCart={() => addToCart?.(product)}
+                                text="Add to Cart"
+                                addedText="Added"
+                                loadingTime={1000}
+                                resetTime={2000}
                                 disabled={product.stock <= 0}
-                                className="button-ripple inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-300"
-                            >
-                                <svg
-                                    width="18"
-                                    height="18"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="1.8"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    aria-hidden="true"
-                                >
-                                    <path d="M5 8h14l1 13H4L5 8Z" />
-                                    <path d="M9 8a3 3 0 0 1 6 0" />
-                                </svg>
-                                Add to Cart
-                            </button>
+                                className="!rounded-xl !bg-indigo-600 !px-5 !py-3 !text-sm hover:!bg-indigo-700"
+                            />
+
                         </div>
                     </div>
                 </div>
@@ -263,15 +228,19 @@ const ProductCard = ({
                     </span>
                 </div>
 
-                <button
-                    ref={buttonRef}
-                    type="button"
-                    onClick={handleAddToCart}
+                <AddToCartButton
+                    onAddToCart={() => addToCart?.(product)}
+                    text="Add to Cart"
+                    addedText="Added"
+                    loadingTime={1000}
+                    resetTime={2000}
                     disabled={product.stock <= 0}
-                    className="button-ripple mt-4 w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-300"
-                >
-                    {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
-                </button>
+                    className="mt-4 w-full !rounded-xl !bg-indigo-600 !px-4 !py-3 !text-sm hover:!bg-indigo-700"
+                />
+
+
+
+
             </div>
         </article>
     );
